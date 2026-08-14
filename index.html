@@ -6,6 +6,12 @@
   <meta name="theme-color" content="#0b0b0c">
   <meta name="color-scheme" content="dark light">
   <meta name="description" content="Loyal Studios Management private workspace">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Loyal Management">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
   <title>Loyal Studios Management</title>
   <link rel="manifest" href="./manifest.webmanifest">
   <script src="./config.js"></script>
@@ -45,6 +51,29 @@
       const themeMeta=document.querySelector('meta[name="theme-color"]');
       const applyTheme=()=>{const isDark=prefersDark.matches;themeMeta.content=isDark?(cfg.themeColorDark||'#0b0b0c'):(cfg.themeColorLight||'#f7f7f5');const candidates=[isDark?cfg.logoDarkUrl:cfg.logoLightUrl,cfg.logoUrl,isDark?cfg.logoLightUrl:cfg.logoDarkUrl].filter((c,i,l)=>c&&l.indexOf(c)===i);const tryLogo=i=>{if(i>=candidates.length){logo.removeAttribute('src');logo.style.display='none';return}logo.onload=()=>logo.style.display='block';logo.onerror=()=>tryLogo(i+1);logo.src=candidates[i]};logo.style.display='none';tryLogo(0)};
       applyTheme();prefersDark.addEventListener?.('change',applyTheme);
+
+      const SESSION_CHANNEL='LSM_SESSION_V1',SESSION_KEY='lsm_trusted_session_token';
+      const allowedSessionOrigin=origin=>{
+        try{
+          const host=new URL(origin).hostname;
+          return origin==='https://script.google.com'||host==='script.googleusercontent.com'||host.endsWith('.googleusercontent.com');
+        }catch(e){return false}
+      };
+      window.addEventListener('message',event=>{
+        if(!event.data||event.data.channel!==SESSION_CHANNEL||!allowedSessionOrigin(event.origin))return;
+        const type=event.data.type;
+        if(type==='GET'){
+          let token='';try{token=localStorage.getItem(SESSION_KEY)||''}catch(e){}
+          try{event.source?.postMessage({channel:SESSION_CHANNEL,type:'TOKEN',token},'*')}catch(e){}
+        }else if(type==='SET'){
+          try{if(event.data.token)localStorage.setItem(SESSION_KEY,String(event.data.token))}catch(e){}
+        }else if(type==='CLEAR'){
+          try{localStorage.removeItem(SESSION_KEY)}catch(e){}
+        }
+      });
+      try{navigator.storage?.persist?.().catch(()=>{})}catch(e){}
+      if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{}))}
+
       const showSlowState=()=>{status.textContent='This is taking longer than expected. You can keep waiting, retry, or open the Apps Script app directly.';actions.classList.add('show')};
       const beginLoad=()=>{loadAttempt++;const attempt=loadAttempt;clearTimeout(slowTimer);splash.classList.remove('hide');splash.setAttribute('aria-busy','true');spinner.hidden=false;actions.classList.remove('show');setup.classList.remove('show');status.textContent='Loading private workspace…';frame.src=url;slowTimer=setTimeout(()=>{if(attempt===loadAttempt)showSlowState()},slowLoadMs)};
       if(!url||url.includes('PASTE_APPS_SCRIPT')){spinner.hidden=true;status.textContent='Setup required';setup.classList.add('show');splash.setAttribute('aria-busy','false');return}
