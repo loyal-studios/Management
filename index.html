@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0c">
+  <title>Loyal Studios Management</title>
+  <script src="./config.js"></script>
+  <style>
+    *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;background:#0b0b0c;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden}
+    #app{position:fixed;inset:0;width:100%;height:100%;border:0;background:#0b0b0c}
+    #splash{position:fixed;inset:0;display:grid;place-items:center;background:#0b0b0c;color:#f4f4f5;z-index:5;transition:opacity .2s ease,visibility .2s ease}
+    #splash.hide{opacity:0;visibility:hidden;pointer-events:none}.wrap{text-align:center;padding:24px}.logo{max-width:220px;max-height:70px;object-fit:contain;margin:0 auto 18px;display:none}.brand{font-size:13px;letter-spacing:.15em;font-weight:800}.sub{font-size:11px;color:#85858d;margin-top:7px}.spinner{width:25px;height:25px;border:3px solid #29292d;border-top-color:#f4f4f5;border-radius:50%;animation:spin .7s linear infinite;margin:24px auto 0}@keyframes spin{to{transform:rotate(360deg)}}
+    #setup{display:none;max-width:560px;text-align:left;background:#111113;border:1px solid #29292d;border-radius:16px;padding:20px;color:#f4f4f5;line-height:1.55}#setup code{display:block;margin-top:10px;background:#171719;border:1px solid #29292d;border-radius:9px;padding:10px;color:#b8b8bf;word-break:break-all}
+  </style>
+</head>
+<body>
+  <iframe id="app" allow="clipboard-read; clipboard-write"></iframe>
+  <div id="splash"><div class="wrap"><img id="logo" class="logo" alt="Loyal Studios Management"><div class="brand">LOYAL STUDIOS MANAGEMENT</div><div class="sub">Loading private workspace…</div><div class="spinner"></div></div></div>
+  <div id="setup"></div>
+  <script>
+    (()=>{
+      const cfg=window.LSM_CONFIG||{};
+      if(cfg.faviconUrl){const f=document.createElement('link');f.rel='icon';f.href=cfg.faviconUrl;document.head.appendChild(f)}
+      const logo=document.getElementById('logo');if(cfg.logoUrl){logo.src=cfg.logoUrl;logo.onload=()=>logo.style.display='block';}
+      const url=String(cfg.appUrl||'').trim();
+      if(!url || url.includes('PASTE_APPS_SCRIPT')){
+        document.getElementById('splash').style.display='none';
+        const setup=document.getElementById('setup');setup.style.display='block';setup.style.position='fixed';setup.style.inset='50% auto auto 50%';setup.style.transform='translate(-50%,-50%)';
+        setup.innerHTML='<b>GitHub wrapper belum dikonfigurasi.</b><br>Paste URL deployment Apps Script <code>/exec</code> ke <code>config.js → appUrl</code>.';
+        return;
+      }
+      const frame=document.getElementById('app');frame.src=url;frame.addEventListener('load',()=>setTimeout(()=>document.getElementById('splash').classList.add('hide'),250));
+    })();
+  </script>
+</body>
+</html>
