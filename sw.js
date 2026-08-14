@@ -1,4 +1,4 @@
-const CACHE_NAME='lsm-shell-v1.2.0';
+const CACHE_NAME='lsm-shell-v1.2.2';
 const SHELL=[
   './',
   './index.html',
