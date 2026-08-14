@@ -19,7 +19,7 @@
     :root{color-scheme:dark light;--bg:#0b0b0c;--panel:#111113;--border:#29292d;--text:#f4f4f5;--muted:#929299;--button:#f4f4f5;--button-text:#0b0b0c}
     @media(prefers-color-scheme:light){:root{--bg:#f7f7f5;--panel:#fff;--border:#dededb;--text:#111113;--muted:#68686f;--button:#111113;--button-text:#fff}}
     *{box-sizing:border-box}html,body{width:100%;min-height:100%;margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden;overscroll-behavior:none}
-    #app{position:fixed;inset:0;width:100%;height:100%;height:100dvh;border:0;background:var(--bg)}
+    #app{position:fixed;top:env(safe-area-inset-top,0px);right:env(safe-area-inset-right,0px);bottom:env(safe-area-inset-bottom,0px);left:env(safe-area-inset-left,0px);width:auto;height:auto;border:0;background:var(--bg)}
     #splash{position:fixed;inset:0;z-index:5;display:grid;min-height:100%;min-height:100dvh;place-items:center;padding:max(24px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left));background:var(--bg);color:var(--text);transition:opacity .2s ease,visibility .2s ease}
     #splash.hide{opacity:0;visibility:hidden;pointer-events:none}.wrap{width:min(100%,520px);text-align:center}
     .logo{display:none;width:auto;max-width:min(310px,80vw);height:auto;max-height:118px;object-fit:contain;margin:0 auto 12px}
